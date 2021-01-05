@@ -17,8 +17,8 @@ qSIP analysis using sequins, MAG coverage, and MAG taxonomy is performed using t
 Note: Sequins that were spiked in the DNA-SIP fractions will be used in scaling and creating linear regression models for evaluating absolute MAG concentrations. Please see `sequin_scaling.R` \n
 For normalizing coverage values please see `pooling_funs.R` \n
 
-This R markdown primarily uses `Tidyverse`, `phyloseq`, and `HTSSIP` packages \n
-This markdown uses functions from `functions_qSIP_MAGs.R` \n
+This R markdown primarily uses `Tidyverse`, `phyloseq`, `HTSSIP`, and `qsipR` packages \n
+
 ```{r Load libraries}
 #Load required libraries
 library(tidyverse)

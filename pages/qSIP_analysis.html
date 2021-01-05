@@ -421,7 +421,7 @@ summary {
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p>qSIP analysis using sequins, MAG coverage, and MAG taxonomy is performed using this R markdown. Briefly, coverages are normalized, MAG coverages are then scaled based on linear regression models from sequin coverage and concentrations, a phyloseq object is created from MAG absolute concentrations and taxonomy (GTDB taxonomy output format is required) data.  Note: Sequins that were spiked in the DNA-SIP fractions will be used in scaling and creating linear regression models for evaluating absolute MAG concentrations. Please see <code>sequin_scaling.R</code>  For normalizing coverage values please see <code>pooling_funs.R</code> </p>
-<p>This R markdown primarily uses <code>Tidyverse</code>, <code>phyloseq</code>, and <code>HTSSIP</code> packages  This markdown uses functions from <code>functions_qSIP_MAGs.R</code> </p>
+<p>This R markdown primarily uses <code>Tidyverse</code>, <code>phyloseq</code>, <code>HTSSIP</code>, and <code>qsipR</code> packages </p>
 <pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.0 --</code></pre>
 <pre><code>## v ggplot2 3.3.2     v purrr   0.3.4
 ## v tibble  3.0.4     v dplyr   1.0.2
