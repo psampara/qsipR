@@ -14,7 +14,7 @@ Additionally, the bouyant density plots for stable isotope incorporating MAGs wi
 A tutorial with an explanation of functions and mock outputs is provided. Also, an R markdown is provided for the complete workflow of qsipR
 
 - [Tutorial](pages/qsipR_tutorial.html)
-- [R markdown](qSIP_analysis.rmd)
+- [R markdown](https://github.com/psampara/qsipR/blob/master/qsipR_tutorial.Rmd)
 
 Please [submit an issue](https://github.com/ZielsLab/qSIP_metagenomics/issues), or fork [the GitHub repository](https://github.com/ZielsLab/qSIP_metagenomics),
 make modifications, and submit a pull request, if anything is confusing or incorrect. Please reach out to psampara@mail.ubc.ca for comments/feedback
