@@ -69,8 +69,8 @@ seq_dilution <- readr::read_csv("mock_input_data/dilutions_data.csv")
 
 Regression plots will be saved into a folder `sequin_scaling_plots`. A sample plot is provided below. 
 
-```{r, fig.cap=c("Sequin scaling regression plot"), echo = F, warning = F}
-knitr::include_graphics("./mock_input_data/12C_rep_1_fraction_1.pdf")
+```{r, fig.cap=c("Sequin scaling regression plot"), echo = F, warning = F, fig.width=15, fig.height=12, fig.align='center'}
+knitr::include_graphics("./mock_input_data/12C_rep_1_fraction_1.png")
 ```
 
 ## Calculate atom fraction excess
@@ -93,6 +93,32 @@ GC_content = readr::read_csv("mock_input_data/GC_content.csv")
 head(GC_content)
 ```
 
+## Additional files required for analysis
+
+### Fractions metadata
+A fractions file as a comma separated file (.csv file) with the following columns: \n
+
+  -Replicate: Depends on how many replicates the study has \n
+  
+  -Fractions: Typically in the range of 1-24 \n
+  
+  -Buoyant_density: As calculated from the refractometer for each fraction and replicate \n
+  
+  -Isotope - "12C", "13C", "14N", "15N" etc. \n
+  
+  -DNA_concentration \n
+  
+  -Sample - In the format "'isotope'\_rep\_#\_fraction\_#". For instance 12C\_rep\_1\_fraction\_1 \n
+
+A sample file is shown below:
+
+```{r, echo = F, warning=F}
+fractions = readr::read_csv("mock_input_data/fractions.csv")
+head(fractions)
+```
+
+### GTDB style taxonomy data
+A taxonomy file in the GTDB output format (.tsv format). Load the bacteria and archaea taxonomy outputs separately. The markdown requires loading the standard output files from GTDB-Tk separately for bacteria and archaea
 
 ## Calculate bootstrap confidence intervals for AFE using qSIP
 
@@ -102,8 +128,8 @@ Calculate bootstrap confidence intervals (CI) for atom fraction excess using q-S
 
 Use `ggplot2` package Plot AFE CI for each taxa to identify incoporators. A sample AFE plot is shown below:
 
-```{r, fig.cap=c("Atom fraction excess with bootstrapped onfidence intervals to identify incorporators"), echo = F, warning = F}
-knitr::include_graphics("./mock_input_data/atom_fration_excess.pdf")
+```{r, fig.cap=c("Atom fraction excess with bootstrapped confidence intervals to identify incorporators. Aqua color indicates an incorporator, which has an AFE > 0"), echo = F, warning = F, fig.width=15, fig.height=12, fig.align='center'}
+knitr::include_graphics("./mock_input_data/atom_fration_excess.png")
 ```
 
 A list of incorporators can also be obtained using the following function
@@ -114,7 +140,7 @@ incorporators_taxonomy(taxonomy, bootstrapped_AFE_table)
 
 `qsipR` also provides a function to visualize the absolute abundance of a taxa across the buoyant density gradient. A sample plot is shown below.
 
-```{r, fig.cap=c("mean abundance across buoyant density gradient"),echo = F, warning = F}
-knitr::include_graphics("mock_input_data/mean_abundance_NC_000964.3.pdf")
+```{r, fig.cap=c("mean absolute abundance of 12C (red) and 13C (aqua) fractions of interested taxa across buoyant density gradient"),echo = F, warning = F}
+knitr::include_graphics("mock_input_data/mean_abundance_NC_000964.3.png")
 ```
 
