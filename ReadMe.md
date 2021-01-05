@@ -1,18 +1,7 @@
-## Simple site: Easy websites with GitHub pages
+qsipR is a statistical analysis package to identify isotope incorporating MAGs using the principles of quantitative stable isotope probing (qSIP).
 
-[Github Pages](https://pages.github.com) provide a simple way to make a
-website using Markdown and git.
-
-This is a minimal tutorial to get started.
-
-View the thing [here](https://kbroman.org/simple_site).
-
----
-
-To the extent possible under law,
-[Karl Broman](https://github.com/kbroman)
-has waived all copyright and related or neighboring rights to
-&ldquo;[simple site](https://github.com/kbroman/simple_site)&rdquo;.
-This work is published from the United States.
-<br/>
-[![CC0](https://i.creativecommons.org/p/zero/1.0/88x31.png)](https://creativecommons.org/publicdomain/zero/1.0/)
+Statistical analysis to identify a stable isotope incorporating taxa obtained as metagenome-assembled genomes (MAGs). 
+Scaled absolute abundances are utilized which are obtained from relative abundance of MAGs and sequins (spike-ins) of known concentration over a range of coverages. 
+Using absolute abundances and bootstrapping, atom fraction excess of MAGs is estimated, and thereby, incorporators of a stable isotope are identified. 
+Please refer [Hungate et al. (2015)](doi:10.1128/AEM.02280-15) for details on quantitative stable isotope probing. 
+Additionally, the bouyant density plots for stable isotope incorporating MAGs will also be provided.
