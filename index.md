@@ -11,8 +11,10 @@ Using absolute abundances and bootstrapping, atom fraction excess of MAGs is est
 Please refer [Hungate et al. (2015)](doi:10.1128/AEM.02280-15) for details on quantitative stable isotope probing. 
 Additionally, the bouyant density plots for stable isotope incorporating MAGs will also be provided.
 
+A tutorial with an explanation of functions and mock outputs is provided. Also, an R markdown is provided for the complete workflow of qsipR
 
 - [Tutorial](pages/qsipR_tutorial.html)
+- [R markdown](qSIP_analysis.rmd)
 
 Please [submit an issue](https://github.com/ZielsLab/qSIP_metagenomics/issues), or fork [the GitHub repository](https://github.com/ZielsLab/qSIP_metagenomics),
 make modifications, and submit a pull request, if anything is confusing or incorrect. Please reach out to psampara@mail.ubc.ca for comments/feedback
