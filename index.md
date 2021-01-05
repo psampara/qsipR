@@ -17,7 +17,7 @@ A tutorial with an explanation of functions and mock outputs is provided. Also, 
 - <a id="raw-url" href="https://raw.githubusercontent.com/psampara/qsipR/master/qSIP_analysis.rmd">R markdown</a>
 - [Example output from the above markdown](pages/qSIP_analysis.html)
 
-Please [submit an issue](https://github.com/ZielsLab/qSIP_metagenomics/issues), or fork [the GitHub repository](https://github.com/ZielsLab/qSIP_metagenomics),
+Please [submit an issue](https://github.com/psampara/qsipR/issues), or fork [the GitHub repository](https://github.com/psampara/qsipR/tree/package),
 make modifications, and submit a pull request, if anything is confusing or incorrect. Please reach out to psampara@mail.ubc.ca for comments/feedback
 
 ---
