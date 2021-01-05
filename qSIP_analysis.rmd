@@ -1,0 +1,236 @@
+---
+title: "qSIP_analysis"
+author: "Pranav_Sampara"
+date: "02/07/2020"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+```
+
+# Introduction
+qSIP analysis using sequins, MAG coverage, and MAG taxonomy is performed using this R markdown. Briefly, coverages are normalized, MAG coverages are then scaled based on linear regression models from sequin coverage and concentrations, a phyloseq object is created from MAG absolute concentrations and taxonomy (GTDB taxonomy output format is required) data. \n
+Note: Sequins that were spiked in the DNA-SIP fractions will be used in scaling and creating linear regression models for evaluating absolute MAG concentrations. Please see `sequin_scaling.R` \n
+For normalizing coverage values please see `pooling_funs.R` \n
+
+This R markdown primarily uses `Tidyverse`, `phyloseq`, and `HTSSIP` packages \n
+This markdown uses functions from `functions_qSIP_MAGs.R` \n
+```{r Load libraries}
+#Load required libraries
+library(tidyverse)
+library(phyloseq)
+library(qsipR)
+library(HTSSIP)
+library(data.table)
+library(ggpubr)
+```
+
+## Load required data 
+
+The following files are required: \n
+
+#MAG coverage data
+-Pooled coverages data as a comma separated file (.csv file) across samples for `Features` incuding sequins that were used as spike-ins. The followings columns are required: \n   
+
+  -Feature: A character string describing the `Feature` label \n
+  
+  -Sample: The label for these n number of columns should be in the format of "'isotope'\_rep\_#\_fraction\_#". For instance, "12C\_rep\_1\_fraction\_1". The number of sample columns should be the same as the product of (replicates, fractions, isotopes) \n
+    
+#Sequin metadata
+-Load the sequins metadata as a comma separated file (.csv file) which has the following columns: \n
+
+  -Feature: As described above \n
+    
+  -Length: Length of the sequin in bp \n
+    
+  -GC_content: GC content of the sequin \n
+  
+  -Sequence: Sequin nucleotide sequence \n
+  
+  -Concentration: Concentration of the sequin in attamoles/uL \n
+    
+#Dilutions data
+-Load dilutions data as a comma separated file (.csv file) that contains the following columns: \n
+
+  -Sample: Similar to the sample name as described above \n
+  
+  -Dilution: Dilution of sequins added to the fraction before sequencing. \n
+
+#Fractions metadata
+-A fractions file as a comma separated file (.csv file) with the following columns: \n
+
+  -Replicate: Depends on how many replicates the study has \n
+  
+  -Fractions: Typically in the range of 1-24 \n
+  
+  -Buoyant_density: As calculated from the refractometer for each fraction and replicate \n
+  
+  -Isotope - "12C", "13C", "14N", "15N" etc. \n
+  
+  -DNA_concentration \n
+  
+  -Sample - In the format "'isotope'\_rep\_#\_fraction\_#". For instance 12C\_rep\_1\_fraction\_1 \n
+
+#GTDB style taxonomy data
+- A taxonomy file in the GTDB output format (.tsv format). Load the bacteria and archaea taxonomy outputs separately. The markdown requires loading the standard output files from GTDB-Tk separately for bacteria and archaea
+
+#MAG absolute concentrations
+-MAG absolute concentrations obtained from scaling_sequins.R. \n
+`mag_tab` object obtained from the above script is to be used as the input here
+
+#GC content
+-GC content of the MAGs as a comma separated file (.csv file). The table should contain the following columns: \n
+
+  -OTU: MAG identifier such as the `Feature` label from the `sequin_scaling.R` script \n
+  
+  -GC_content: GC content of the `Feature` in the range of 0-1 \n
+  
+#Log scale BOOLEAN: \n
+
+True or False depending on how you would want the MAG coverages to be scaled. Select TRUE if you need MAG concentrations scaled on the log scale \n
+
+#coe_of_variation: \n
+Acceptable coeffi
+cient of variation for coverage and detection (eg. 20 for 20 % threshold of coefficient of variation) 
+Coverages above the threshold value will be flagged in the plots \n
+
+##Optional analysis:
+#Mean coverage or median coverage of features in a bin
+To obtain a mean or median statistic of coverage of features in a bin, please load the following data in .csv format containing the corresponding columns:
+
+- MAG coverage data file that is previously loaded
+
+Bins data with the following columns: \n
+- Feature: Column containing feature IDs as in the Coverage data \n
+- Bins: Bin IDs the above features belong to
+
+Finally, provide an operator for required statistic: 
+For mean of coverage values per bin (OR) \n
+- opr = "mean"
+For median of coverage values per bin \n
+- opr = "median"
+```{r Load data}
+## Load data
+#Coverage metadata
+#Uncomment if your coverage data is in the format mentioned above for this file. Remains commented if you are using the output from `checkm coverage`
+#f_tibble = read_csv(file="input_data/f_tibble.csv")
+
+#Sequins metadata
+sequins <- read_csv(file="input_data/sequins_metadata.csv")
+
+#Dilutions data
+seq_dil = read_csv(file = "input_data/dilutions_data.csv")
+
+#Log scale BOOLEAN. True or False depending on how you would want the MAG coverages to be scaled. Select TRUE if you need MAG concentrations scaled on the log scale
+log_scale = TRUE
+
+#coe_of_variation. Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation) (Coverages above the threshold value will be flagged in the plots)
+coe_of_variation = 20
+
+#Taxonomy
+gtdbtk_bac_summary = read_delim("input_data/gtdbtk.bac120.summary.tsv", 
+                                 "\t", escape_double = FALSE, trim_ws = TRUE)
+gtdbtk_archaea = read_delim("input_data/gtdbtk.ar122.summary.tsv", 
+                             "\t", escape_double = FALSE, trim_ws = TRUE)
+#GC content
+GC_content <- read_csv(file = "input_data/GC_content.csv")
+
+#Fractions
+fractions = read_csv("input_data/fractions.csv")
+
+##Optional
+#Bin data
+#Use this line if you are using coverage data from `checkm coverage` program's output. Otherwise ensure your data is in the format specified for this pipeline and comment this next line
+bin_tibble = read_delim("input_data/checkm_coverage.tsv", "\t", escape_double = FALSE, trim_ws = TRUE)
+#Operator
+operator = "mean"
+set.seed(seed = 1000)
+```
+
+#qSIP analysis
+
+Create required `phyloseq` objects 
+
+```{r Make phyloseq objects}
+taxonomy = rbind(gtdbtk_bac_summary, gtdbtk_archaea) #Combine bacteria and archaea taxonomy files if necessary
+#mag_tab is a tibble with absolute concentrations of MAGs obtained by scaling MAG coverages using linear regression models on sequin coverages and concentration
+
+#Optional coverage pooling and statistics
+#Comment if your coverage data (f_tibble) is in the format specified for this pipeline. Use this line if you are using the coverage file from `checkm coverage` program's output
+f_tibble = pool_bin_stat(bin_tibble, operator = operator)
+#Changing the column names. Only in this particular example as this data does not correspond to the column name format required for this pipeline
+colnames(f_tibble) = colnames(read_csv("f_tibble_correct_format.csv"))
+#Save the output file
+write.csv(f_tibble, "pool_bin_stat.csv", row.names = F)
+
+
+#Scale MAG coverages to obtain MAG absolute concentrations and save scaling plots in the working directory
+mag_tab_scaled <- scale_features(f_tibble, sequins, seq_dil, log_scale, coe_of_variation)
+
+mag_tab = as.matrix(mag_tab_scaled$mag_tab) #Extract absolute abundances as a matrix
+#mag_tab = as.matrix(mag_tab) #Ensuring input for phyloseq OTU table is in a matrix format
+mag.table = phyloseq::otu_table(mag_tab, taxa_are_rows = TRUE) #Phyloseq OTU table
+
+taxonomy.object = tax.table(taxonomy) # Create a taxonomy phyloseq object
+samples.object = sample.table(fractions) # Create a samples phyloseq object
+phylo.qSIP = phylo.table(mag.table, taxonomy.object, samples.object) # Make a phyloseq table for downstream qSIP analysis
+```
+
+Calculate atom fraction excess. By bootstrapping confidence intervals, determine incorporators
+
+```{r Calculate atom fraction excess}
+atomX = qSIP_atom_excess_MAGs(phylo.qSIP,
+                               control_expr='Isotope=="12C"',
+                               treatment_rep='Replicate',
+                               Gi = GC_content)
+#Bootstrap confidence intervals
+df_atomX_boot = qSIP_bootstrap(atomX, n_boot=100)
+df_atomX_boot %>% head
+CI_threshold = 0
+df_atomX_boot = df_atomX_boot %>%
+  mutate(Incorporator = A_CI_low > CI_threshold,
+         OTU = reorder(OTU, -A))
+#Get incorporator info
+n_incorp = df_atomX_boot %>%
+  filter(Incorporator == TRUE) %>%
+  nrow 
+#Get incorporator list
+incorporator_list = incorporators_taxonomy(taxonomy = taxonomy, bootstrapped_AFE_table = df_atomX_boot)
+#Print incorporator information
+cat('Number of incorporators:', n_incorp, '\n')
+cat('Incorporators: \n')
+incorporator_list
+```
+
+Plot the atom fraction excess plot
+
+```{r Plot atom fraction excess}
+(atom_f_excess_plot = ggplot(df_atomX_boot, aes(OTU, A, ymin=A_CI_low, ymax=A_CI_high, color=Incorporator)) +
+  geom_pointrange(size=0.25) +
+  geom_linerange() +
+  geom_hline(yintercept=0, linetype='dashed', alpha=0.5) +
+  labs(x='MAGs', y='Atom fraction excess') +
+  theme_bw() +
+  coord_flip() +
+  ggtitle("Isotope incorporating MAGs"))
+ggsave(filename = "atom_fration_excess.pdf", plot = atom_f_excess_plot, path = ".")
+```
+
+## Optional workflow to view abundance vs BD plots of incorporators
+This is an optional workflow that outputs plots with mean and standard deviation of abundance and mean buoyant density across the replicates for the incorporators. The plots are saved in the folder "abundance_plots" in the current directory
+
+#Input parameters
+- incorporator_list - A tibble of incorporators and their taxonomy as obtained from the previous steps of the markdown
+
+- fractions - The same fractions metadata file as loaded previously
+
+- mag_tab - MAG abundance estimates calculated from the `sequin_scaling.R` function in this markdown
+
+```{r Optional abundance plots}
+BD_abundance_plots = plot_abundance(incorporator_list = incorporator_list, fractions = fractions, mag_tab = mag_tab)
+BD_abundance_plots$plots
+```
