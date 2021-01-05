@@ -1,8 +1,16 @@
 ---
-title: "qsipR_tutorial"
-author: "Pranav_Sampara"
+title: "qsipR tutorial"
+author: "Pranav Sampara"
 date: "04/01/2021"
-output: html_document
+site: bookdown::bookdown_site
+documentclass: book
+description: "Tutorial for qsipR package"
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
+    number_sections: yes
+    theme: united
 ---
 
 # qsipR package tutorial
