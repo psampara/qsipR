@@ -1,6 +1,6 @@
 Package: qSIPmg
 Title: Statistical analysis to identify isotope incorporating MAGs using the principles of quantitative stable isotope probing (qSIP)
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person(given = "Pranav",
            family = "Sampara",
