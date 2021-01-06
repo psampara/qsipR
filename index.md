@@ -13,7 +13,7 @@ Additionally, the bouyant density plots for stable isotope incorporating MAGs wi
 
 A tutorial with an explanation of functions and mock outputs is provided. Also, an R markdown is provided for the complete workflow of qSIPmg. To download the R markdown file, right-click on the link and hit "save link as".
 
-- [Tutorial](pages/qSIPmg_tutorial.html)
+- [Tutorial](pages/qsipR_tutorial.html)
 - <a id="raw-url" href="https://raw.githubusercontent.com/psampara/qsipR/master/qSIP_analysis.rmd">R markdown</a>
 - [Example output from the above markdown](pages/qSIP_analysis.html)
 
