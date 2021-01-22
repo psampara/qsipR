@@ -9,7 +9,7 @@ scale_features(
   sequin_meta,
   seq_dilution,
   log_trans,
-  coe_of_variation
+  coe_of_variation = 10000
 )
 }
 \arguments{
@@ -19,11 +19,11 @@ scale_features(
 
 \item{sequin_meta}{tibble containing sequin names ("Feature column") and concentrations in attamoles/uL ("Concentration") column.}
 
-\item{seq_dilution}{tibble with first column "Sample" with \emph{same sample names as in f_tibble}, and a second column "Dilution" showing ratio of sequins added to final sample volume (e.g. a value of 0.01 for a dilution of 1 volume sequin to 99 volumes sample)}
+\item{seq_dilution}{tibble with first column "Sample" with \strong{same sample names as in f_tibble}, and a second column "Dilution" showing ratio of sequins added to final sample volume (e.g. a value of 0.01 for a dilution of 1 volume sequin to 99 volumes sample)}
 
 \item{log_trans}{Boolean (TRUE or FALSE), should coverages and sequin concentrations be log-scaled?}
 
-\item{coe_of_variation}{Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 \% threshold of coefficient of variation). Coverages above the threshold value will be flagged in the plots}
+\item{coe_of_variation}{Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 \% threshold of coefficient of variation). Coverages above the threshold value will be flagged in the plots. Default value is 10000 - which essentially neglects the coefficient of variation}
 }
 \value{
 a list of tibbles containing
