@@ -18,7 +18,7 @@
 #'  - scale_fac: a master tibble with all of the intermediate values in above calculations
 #'@export
 
-scale_features <- function(f_tibble, sequin_meta, seq_dilution, log_trans, coe_of_variation){
+scale_features <- function(f_tibble, sequin_meta, seq_dilution, log_trans, coe_of_variation=10000){
   # Retrieve sample names from feature tibble
   scale_fac <- dplyr::tibble(Sample = names(f_tibble) %>%
                                stringr::str_subset(pattern = "Feature", negate = TRUE))
@@ -122,18 +122,18 @@ scale_features <- function(f_tibble, sequin_meta, seq_dilution, log_trans, coe_o
                            ggpubr::stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = -0.1, label.y = 3.5) +
                            xlab("Coverage (log[read depth])") +
                            ylab("DNA Concentration (log[attamoles/uL])") +
-                           scale_shape(name = "Coefficient of variation", labels = c("below the threshold", "above the threshold")) +
+                           scale_shape(name = "Coefficient of variation", labels = c(paste("below the threshold (",coe_of_variation,")"), paste("above the threshold(",coe_of_variation,")"))) +
                            theme_bw()
                      ),
                      purrr::map(seq_cov_filt, # non-scaled plot if true
                          ~ ggplot2::ggplot(data=. , aes(x=Coverage, y= Concentration)) +
-                           geom_point(aes(color = threshold_detection)) +
+                           geom_point(aes(shape = threshold_detection)) +
                            geom_smooth(method = "lm") +
                            ggpubr::stat_regline_equation(label.x= 0, label.y = 1000) +
                            ggpubr::stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "~`,`~")), label.x = 0, label.y = 100000) +
                            xlab("Coverage (read depth)") +
                            ylab("DNA Concentration (attamoles/uL)") +
-                           scale_color_discrete(name = "Threshold detection") +
+                           scale_shape(name = "Coefficient of variation", labels = c(paste("below the threshold (",coe_of_variation,")"), paste("above the threshold(",coe_of_variation,")"))) +
                            theme_bw()
                      )
       )
