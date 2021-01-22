@@ -7,7 +7,7 @@
 #' (2) a tibble as outputted by the program "checkm coverage" from the tool CheckM (https://github.com/Ecogenomics/CheckM). If this is the input format, the optional function, pooling_functions.R must be run. `pooling_functions.R` parses the checkM coverage output to provide a tibble as described in option 1. Please check `pooling_functions.R` for further details. Please check CheckM documentation (https://github.com/Ecogenomics/CheckM) on the usage for "checkm coverage" program
 #'@param sequin_meta tibble containing sequin names ("Feature column") and concentrations in attamoles/uL ("Concentration") column.
 #'@param seq_dilution tibble with first column "Sample" with **same sample names as in f_tibble**, and a second column "Dilution" showing ratio of sequins added to final sample volume (e.g. a value of 0.01 for a dilution of 1 volume sequin to 99 volumes sample)
-#'@param coe_of_variation Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation). Coverages above the threshold value will be flagged in the plots. Default value is 10000 - which essentially neglects the coefficient of variation
+#'@param coe_of_variation Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 % threshold of coefficient of variation). Coverages above the threshold value will be flagged in the plots.
 #'@param log_trans Boolean (TRUE or FALSE), should coverages and sequin concentrations be log-scaled?
 #'@import magrittr
 #'@importFrom rlang .data
@@ -18,7 +18,7 @@
 #'  - scale_fac: a master tibble with all of the intermediate values in above calculations
 #'@export
 
-scale_features <- function(f_tibble, sequin_meta, seq_dilution, log_trans, coe_of_variation = 10000){
+scale_features <- function(f_tibble, sequin_meta, seq_dilution, log_trans, coe_of_variation){
   # Retrieve sample names from feature tibble
   scale_fac <- dplyr::tibble(Sample = names(f_tibble) %>%
                                stringr::str_subset(pattern = "Feature", negate = TRUE))
