@@ -289,7 +289,7 @@ qSIP_bootstrap_MAGs = function(atomX, isotope='13C', n_sample=c(3,3),
                                n_boot=10, parallel=FALSE, a=0.1){
   # atom excess for each bootstrap replicate
   df_boot_id = data.frame(bootstrap_id = 1:n_boot)
-  df_boot = plyr::mdply(df_boot_id, .qSIP_bootstrap,
+  df_boot = plyr::mdply(df_boot_id, .qSIP_bootstrap_MAGs,
                         atomX = atomX,
                         isotope=isotope,
                         n_sample=n_sample,
