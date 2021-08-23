@@ -1,4 +1,4 @@
-qsipR is a statistical analysis package to identify isotope incorporating MAGs using the principles of quantitative stable isotope probing (qSIP).
+qSIPmg is a statistical analysis package to identify isotope incorporating MAGs using the principles of quantitative stable isotope probing (qSIP).
 
 Statistical analysis to identify a stable isotope incorporating taxa obtained as metagenome-assembled genomes (MAGs). 
 Scaled absolute abundances are utilized which are obtained from relative abundance of MAGs and sequins (spike-ins) of known concentration over a range of coverages. 
