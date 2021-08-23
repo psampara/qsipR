@@ -15,4 +15,4 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: HTSSIP, dplyr, lazyeval, phyloseq,
     plyr, stringr, tibble, tidyr, magrittr,
-    ggplot2, ggpubr, purrr, rlang
+    ggplot2, ggpubr, purrr, rlang, MASS

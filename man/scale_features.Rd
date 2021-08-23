@@ -5,14 +5,18 @@
 \title{Scale feature coverage values to estimate their absolute abundance}
 \usage{
 scale_features(
+  rlm_scaling = T,
   f_tibble,
   sequin_meta,
   seq_dilution,
-  log_trans,
-  coe_of_variation = 10000
+  log_trans = TRUE,
+  coe_of_variation = 10000,
+  cook_filtering = F
 )
 }
 \arguments{
+\item{rlm_scaling}{Boolean (TRUE or FALSE), should coverages and sequin concentrations be scaled using robust linear regression? Ideally, outliers should not be deleted and a robust linear regression (rlm) should be run. In rlm, the regression is done based on a weighted method. In this pipeline, a Huber loss function was used for robust linear regression.}
+
 \item{f_tibble}{Can be either of
 (1) a tibble with first column "Feature" that contains bin IDs, and the rest of the columns represent samples with bins' pooled values. Every sequin is also listed s a feature.
 (2) a tibble as outputted by the program "checkm coverage" from the tool CheckM (https://github.com/Ecogenomics/CheckM). If this is the input format, the optional function, pooling_functions.R must be run. \code{pooling_functions.R} parses the checkM coverage output to provide a tibble as described in option 1. Please check \code{pooling_functions.R} for further details. Please check CheckM documentation (https://github.com/Ecogenomics/CheckM) on the usage for "checkm coverage" program}
@@ -23,7 +27,9 @@ scale_features(
 
 \item{log_trans}{Boolean (TRUE or FALSE), should coverages and sequin concentrations be log-scaled?}
 
-\item{coe_of_variation}{Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 \% threshold of coefficient of variation). Coverages above the threshold value will be flagged in the plots. Default value is 10000 - which essentially neglects the coefficient of variation}
+\item{coe_of_variation}{Acceptable coefficient of variation for coverage and detection (eg. 20 - for 20 \% threshold of coefficient of variation). Coverages above the threshold value will be flagged in the plots.}
+
+\item{cook_filtering}{Boolean (TRUE or FALSE), should data points be filtered based on Cook's distance metric. Cooks distance can be useful in detecting influential outliers in an ordinary least square’s regression model, which can negatively influence the model. A threshold of Cooks distance of 4/n (where n is the sample size) is chosen, and any data point with Cooks distance > 4/n is filtered out. It is typical to choose 4/n as the threshold in detecting the outliers in the data}
 }
 \value{
 a list of tibbles containing
